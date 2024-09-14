@@ -11,47 +11,101 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class CustomerService {
+
+    // Initialize the Logger
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     @Autowired
     private CustomerRepository repo;
 
     public Flux<Customer> getAllCustomers() {
-        return repo.findAll();
-    }
-
-    public Flux<Customer> getCustomersByDateRange(LocalDate startDate, LocalDate endDate) {
-        return repo.findByCreatedDateBetween(startDate, endDate);
-    }
-
-    public Mono<Customer> createCustomer(Customer customer) {
-        return repo.findByEmail(customer.getEmail())
-                .flatMap(existingCustomer -> Mono.<Customer>error(new EmailAlreadyExistException("Customer", "email", customer.getEmail())))
-                .switchIfEmpty(repo.save(customer).cast(Customer.class));
+        return repo.findAll()
+                .doOnSubscribe(subscription -> logger.info("Started fetching all customers"))
+                .doOnComplete(() -> logger.info("Successfully fetched all customers"))
+                .doOnError(e -> logger.error("Failed to fetch all customers. Error: {}", e.getMessage()));
     }
 
     public Mono<Customer> getCustomerById(long id) {
         return repo.findById(id)
+                .doOnSuccess(customer -> {
+                    if (customer != null) {
+                        logger.info("Customer fetched successfully: {}", customer);
+                    }else {
+                        logger.warn("Customer not found with id : "+id);
+                    }
+                })
+                .doOnError(e -> logger.error("Failed to fetch customer with ID: {}. Error: {}", id, e.getMessage()))
                 .switchIfEmpty(Mono.error(new ResourceNotFoundException("Customer", "id", id)));
     }
 
+    public Flux<Customer> getCustomersByDateRange(LocalDate startDate, LocalDate endDate) {
+        return repo.findByCreatedDateBetween(startDate, endDate)
+                .collectList()  // Collect the Flux into a List to count total records
+                .flatMapMany(customers -> {
+                    logger.info("Total records found between {} and {}: {}", startDate, endDate, customers.size());
+                    return Flux.fromIterable(customers);  // Return the Flux from the List
+                })
+                .doOnError(e -> logger.error("Failed to fetch customers by date range ({} to {}). Error: {}", startDate,endDate, e.getMessage()))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Customer","date between "+startDate.toString()+" and "+endDate.toString(),null)));
+    }
+//    public Mono<Customer> createCustomer(Customer customer) {
+//        return repo.findByEmail(customer.getEmail())
+//                .flatMap(existingCustomer -> Mono.<Customer>error(new EmailAlreadyExistException("Customer", "email", customer.getEmail())))
+//                .switchIfEmpty(repo.save(customer).cast(Customer.class));
+//    }
+
+    public Mono<Customer> createCustomer(Customer customer) {
+        return repo.findByEmail(customer.getEmail())
+                .flatMap(existingCustomer -> {
+                    logger.info("Customer already exist with email : {}",customer.getEmail());
+                    return Mono.error(new EmailAlreadyExistException("Customer", "email", customer.getEmail())).cast(Customer.class);
+                })
+                .switchIfEmpty(repo.save(customer).cast(Customer.class)
+                        .doOnSuccess(createdCustomer -> logger.info("Customer created successfully with ID: {}", createdCustomer.getId()))
+                        .doOnError(e -> logger.error("Failed to create customer. Error: {}", e.getMessage()))
+                );
+    }
+
+
     public Mono<Customer> updateCustomer(long id, Customer customer) {
         return repo.findById(id)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Customer", "id", id)))
+                .switchIfEmpty(Mono.defer(() -> {
+                    logger.warn("Customer not found with ID: {}", id);  // Log when customer is not found
+                    return Mono.error(new ResourceNotFoundException("Customer", "id", id));
+                }))
                 .flatMap(existingCustomer -> {
+                    logger.info("Existing customer found: {}", existingCustomer);
                     existingCustomer.setFirstName(customer.getFirstName());
                     existingCustomer.setLastName(customer.getLastName());
                     existingCustomer.setEmail(customer.getEmail());
                     existingCustomer.setFamilyMembers(customer.getFamilyMembers());
                     existingCustomer.setStatus(customer.getStatus());
-                    return repo.save(existingCustomer);
+                    return repo.save(existingCustomer)
+                            .doOnSuccess(updatedCustomer -> logger.info("Customer updated successfully with ID: {}", id))
+                            .doOnError(e -> logger.error("Failed to update customer with ID: {}. Error: {}", id, e.getMessage()));
                 });
     }
 
-    public Mono<Void> deleteCustomer(long id) {
+    public Mono<String> deleteCustomer(long id) {
         return repo.findById(id)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Customer", "id", id)))
-                .flatMap(existingCustomer -> repo.deleteById(id));
+                .switchIfEmpty(Mono.defer(() -> {
+                    logger.warn("Customer not found with ID: {}", id);  // Log when customer is not found
+                    return Mono.error(new ResourceNotFoundException("Customer", "id", id));
+                }))
+                .flatMap(existingCustomer -> repo.deleteById(id)
+                        .then(Mono.fromSupplier(() -> {
+                            String successMessage = "Customer deleted successfully with ID: " + id;
+                            logger.info(successMessage);
+                            return successMessage;
+                        }))
+                        .doOnError(e -> logger.error("Failed to delete customer with ID: {}. Error: {}", id, e.getMessage()))
+                );
     }
+
+
 }

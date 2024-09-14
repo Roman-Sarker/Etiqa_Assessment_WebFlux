@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,7 +37,6 @@ public class CustomerController {
     public Flux<Customer> getCustomersByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, //RRRR/MM/DD
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        System.out.println("startDate : "+startDate);
         return service.getCustomersByDateRange(startDate, endDate);
     }
 
@@ -54,8 +54,11 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteCustomer(@PathVariable long id) {
-        return service.deleteCustomer(id);
+    public Mono<ResponseEntity<String>> deleteCustomer(@PathVariable long id) {
+        return service.deleteCustomer(id)
+                .map(successMessage -> {  // This will log the success message asynchronously
+                    return ResponseEntity.ok(successMessage);  // Return the success message inside the ResponseEntity
+                });
     }
+
 }
