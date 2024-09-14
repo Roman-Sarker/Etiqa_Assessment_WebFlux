@@ -1,7 +1,7 @@
 package com.etiqa.assessment.customers.controller;
 
 import com.etiqa.assessment.customers.dto.Customer;
-import com.etiqa.assessment.customers.service.CustomerService;
+import com.etiqa.assessment.customers.service.CustomerServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,14 +17,25 @@ import java.time.LocalDate;
 @RequestMapping("/customer")
 public class CustomerController {
     @Autowired
-    private CustomerService service;
-
-    
+    private CustomerServiceImpl service;
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Customer> createCustomer(@Valid @RequestBody Customer customer) {
         return service.createCustomer(customer);
+    }
+
+    @PutMapping("/update/{id}")
+    public Mono<Customer> updateCustomer(@PathVariable long id, @RequestBody Customer customer) {
+        return service.updateCustomer(id, customer);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Mono<ResponseEntity<String>> deleteCustomer(@PathVariable long id) {
+        return service.deleteCustomer(id)
+                .map(successMessage -> {  // This will log the success message asynchronously
+                    return ResponseEntity.ok(successMessage);  // Return the success message inside the ResponseEntity
+                });
     }
 
     @GetMapping("/get/{id}")
@@ -44,21 +55,6 @@ public class CustomerController {
     @GetMapping("/get/all")
     public Flux<Customer> getAllCustomers() {
         return service.getAllCustomers();
-    }
-
-
-
-    @PutMapping("/update/{id}")
-    public Mono<Customer> updateCustomer(@PathVariable long id, @RequestBody Customer customer) {
-        return service.updateCustomer(id, customer);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public Mono<ResponseEntity<String>> deleteCustomer(@PathVariable long id) {
-        return service.deleteCustomer(id)
-                .map(successMessage -> {  // This will log the success message asynchronously
-                    return ResponseEntity.ok(successMessage);  // Return the success message inside the ResponseEntity
-                });
     }
 
 }

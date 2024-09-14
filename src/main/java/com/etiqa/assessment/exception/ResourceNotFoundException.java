@@ -1,7 +1,6 @@
 package com.etiqa.assessment.exception;
 
 
-import com.etiqa.assessment.customers.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

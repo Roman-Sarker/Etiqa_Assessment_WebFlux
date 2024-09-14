@@ -12,6 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "customers")
 public class Customer {
     @Id
+
     private long id;
 
 

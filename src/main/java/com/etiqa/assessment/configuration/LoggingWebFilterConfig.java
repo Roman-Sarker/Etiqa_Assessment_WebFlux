@@ -1,6 +1,6 @@
 package com.etiqa.assessment.configuration;
 
-import com.etiqa.assessment.customers.service.CustomerService;
+import com.etiqa.assessment.customers.service.CustomerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Configuration
 public class LoggingWebFilterConfig {
-    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
     @Bean
     public WebFilter logFilter() {
         return (serverWebExchange, webFilterChain) -> {
