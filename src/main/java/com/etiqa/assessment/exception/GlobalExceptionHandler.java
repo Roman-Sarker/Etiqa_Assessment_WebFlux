@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)
-    public Mono<ResponseEntity<ExceptionDetails>> handleResourceNotFoundException(EmailAlreadyExistException exception, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<ExceptionDetails>> handleEmailAlreadyExistException(EmailAlreadyExistException exception, ServerWebExchange exchange) {
         ExceptionDetails exceptionDetails = new ExceptionDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
@@ -43,9 +43,35 @@ public class GlobalExceptionHandler {
                 .body(exceptionDetails));
     }
 
+    @ExceptionHandler(NoRequestParamException.class)
+    public Mono<ResponseEntity<ExceptionDetails>> handleNoRequestParamException(NoRequestParamException exception, ServerWebExchange exchange){
+        ExceptionDetails exceptionDetails = new ExceptionDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                exchange.getRequest().getPath().value(),
+                "BAD_REQUEST"
+        );
+        return Mono.just(ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionDetails));
+    }
+
+    @ExceptionHandler(NoRequestBodyException.class)
+    public Mono<ResponseEntity<ExceptionDetails>> handleNoRequestBodyException(NoRequestBodyException exception, ServerWebExchange exchange){
+        ExceptionDetails exceptionDetails = new ExceptionDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                exchange.getRequest().getPath().value(),
+                "BAD_REQUEST"
+        );
+        return Mono.just(ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionDetails));
+    }
+
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ExceptionDetails>> handleResourceNotFoundException(Exception exception, ServerWebExchange exchange) {
-        System.out.println("exception : "+exception.getMessage());
+        //System.out.println("exception : "+exception.getMessage());
         ExceptionDetails exceptionDetails = new ExceptionDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),

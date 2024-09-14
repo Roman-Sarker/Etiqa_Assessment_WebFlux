@@ -1,4 +1,4 @@
-package com.etiqa.assessment.customers.dto;
+package com.etiqa.assessment.customers.model;
 
 
 import jakarta.validation.constraints.*;

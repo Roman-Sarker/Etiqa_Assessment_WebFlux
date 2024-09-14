@@ -1,6 +1,6 @@
 package com.etiqa.assessment.customers.service;
 
-import com.etiqa.assessment.customers.dto.Customer;
+import com.etiqa.assessment.customers.model.Customer;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

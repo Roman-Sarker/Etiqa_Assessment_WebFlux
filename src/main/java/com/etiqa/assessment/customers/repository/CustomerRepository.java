@@ -1,6 +1,6 @@
 package com.etiqa.assessment.customers.repository;
 
-import com.etiqa.assessment.customers.dto.Customer;
+import com.etiqa.assessment.customers.model.Customer;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;

@@ -1,6 +1,6 @@
 package com.etiqa.assessment.customers.service;
 
-import com.etiqa.assessment.customers.dto.Customer;
+import com.etiqa.assessment.customers.model.Customer;
 import com.etiqa.assessment.customers.repository.CustomerRepository;
 import com.etiqa.assessment.exception.EmailAlreadyExistException;
 import com.etiqa.assessment.exception.ResourceNotFoundException;

@@ -1,8 +1,13 @@
 package com.etiqa.assessment.customers.controller;
 
-import com.etiqa.assessment.customers.dto.Customer;
+import com.etiqa.assessment.customers.model.Customer;
+import com.etiqa.assessment.customers.service.CustomerService;
 import com.etiqa.assessment.customers.service.CustomerServiceImpl;
+import com.etiqa.assessment.exception.NoRequestBodyException;
+import com.etiqa.assessment.product.model.Products;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -17,16 +22,25 @@ import java.time.LocalDate;
 @RequestMapping("/customer")
 public class CustomerController {
     @Autowired
-    private CustomerServiceImpl service;
+    private CustomerService service;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Customer> createCustomer(@Valid @RequestBody Customer customer) {
+    public Mono<Customer> createCustomer(@RequestBody(required = false) @Valid Customer customer) {
+        if (customer == null){
+            logger.info("Customer request body is null");
+            throw new NoRequestBodyException();
+        }
         return service.createCustomer(customer);
     }
 
     @PutMapping("/update/{id}")
-    public Mono<Customer> updateCustomer(@PathVariable long id, @RequestBody Customer customer) {
+    public Mono<Customer> updateCustomer(@PathVariable long id, @RequestBody(required = false) @Valid Customer customer) {
+        if (customer == null){
+            logger.info("Customer request body is null");
+            throw new NoRequestBodyException();
+        }
         return service.updateCustomer(id, customer);
     }
 
@@ -39,7 +53,6 @@ public class CustomerController {
     }
 
     @GetMapping("/get/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public Mono<Customer> getCustomerById(@PathVariable long id) {
         return service.getCustomerById(id);
     }
@@ -51,7 +64,7 @@ public class CustomerController {
         return service.getCustomersByDateRange(startDate, endDate);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
     @GetMapping("/get/all")
     public Flux<Customer> getAllCustomers() {
         return service.getAllCustomers();
