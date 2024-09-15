@@ -1,5 +1,6 @@
+## Technical Project Document: Customer and Product Management System - Etiqa
 
-Project Overview
+## Project Overview
 This backend API project is designed using **Java Spring WebFlux**, which leverages **reactive programming** principles to handle asynchronous, non-blocking interactions efficiently. The project manages three primary entities: **Customer**, **Product**, and **Purchase**, providing key functionalities around their creation, retrieval, and management. The application demonstrates modern, scalable, and performance-driven design using the **WebFlux Reactive Programming** paradigm.
 
 ## Features
