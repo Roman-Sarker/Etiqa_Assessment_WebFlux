@@ -31,6 +31,7 @@ This backend API project is developed using **Java Spring WebFlux**, which imple
 4. **Maven Project**: For dependency and project management
 5. **IDE**: IntelliJ IDEA 2014.1.4 (Community Edition)
 6. **Database**: MySQL - 10.4.28-MariaDB for persistence
+7. **Swagger UI**: Document and Test.
 
 ## Design Pattern
 The project uses a Java skeleton based on the **Spring MVC** architecture, incorporating controller, service, and repository layers, with a focus on **reactive programming** and **non-blocking I/O**.
@@ -106,6 +107,7 @@ The application consists of three primary tables:
 
 ### Swagger UI
 The project integrates Swagger UI to provide API documentation and testing tools. It enables developers and testers to visualize API endpoints, making it easier to understand and test API requests and responses.
+***URL : http://localhost:8080/swagger-ui.html***
 
 ---
 
