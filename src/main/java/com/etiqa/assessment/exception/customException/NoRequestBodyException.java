@@ -1,4 +1,4 @@
-package com.etiqa.assessment.exception;
+package com.etiqa.assessment.exception.customException;
 
 public class NoRequestBodyException extends RuntimeException{
     public NoRequestBodyException(){

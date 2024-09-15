@@ -2,9 +2,9 @@ package com.etiqa.assessment.customers.controller;
 
 import com.etiqa.assessment.customers.model.Customer;
 import com.etiqa.assessment.customers.service.CustomerService;
-import com.etiqa.assessment.customers.service.CustomerServiceImpl;
-import com.etiqa.assessment.exception.NoRequestBodyException;
-import com.etiqa.assessment.product.model.Products;
+import com.etiqa.assessment.exception.customException.NoRequestBodyException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDate;
 
+@Tag(
+        name = "Customer Management System",
+        description = "This API allows to create customer, update customer, delete customer, and retrieve customer by id/all/by_date range."
+)
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -57,6 +60,7 @@ public class CustomerController {
         return service.getCustomerById(id);
     }
 
+    @Operation(summary = "Date format [YYYY-MM-DD]", description = "like startDate: 2024-09-13, and endDate: 2024-09-15")
     @GetMapping("/get/by-date")
     public Flux<Customer> getCustomersByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, //RRRR/MM/DD

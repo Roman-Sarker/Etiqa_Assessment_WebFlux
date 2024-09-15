@@ -1,5 +1,9 @@
 package com.etiqa.assessment.exception;
 
+import com.etiqa.assessment.exception.customException.EmailAlreadyExistException;
+import com.etiqa.assessment.exception.customException.NoRequestBodyException;
+import com.etiqa.assessment.exception.customException.NoRequestParamException;
+import com.etiqa.assessment.exception.customException.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

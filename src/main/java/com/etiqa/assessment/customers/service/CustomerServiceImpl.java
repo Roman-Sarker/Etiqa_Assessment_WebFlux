@@ -2,8 +2,8 @@ package com.etiqa.assessment.customers.service;
 
 import com.etiqa.assessment.customers.model.Customer;
 import com.etiqa.assessment.customers.repository.CustomerRepository;
-import com.etiqa.assessment.exception.EmailAlreadyExistException;
-import com.etiqa.assessment.exception.ResourceNotFoundException;
+import com.etiqa.assessment.exception.customException.EmailAlreadyExistException;
+import com.etiqa.assessment.exception.customException.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;

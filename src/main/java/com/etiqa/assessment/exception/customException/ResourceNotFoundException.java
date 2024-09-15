@@ -1,8 +1,5 @@
-package com.etiqa.assessment.exception;
+package com.etiqa.assessment.exception.customException;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String resourceName, String fieldName, Long fieldValue){

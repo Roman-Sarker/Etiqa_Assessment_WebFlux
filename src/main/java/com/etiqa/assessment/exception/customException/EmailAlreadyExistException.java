@@ -1,4 +1,4 @@
-package com.etiqa.assessment.exception;
+package com.etiqa.assessment.exception.customException;
 
 public class EmailAlreadyExistException extends RuntimeException{
     private String resourceName;
