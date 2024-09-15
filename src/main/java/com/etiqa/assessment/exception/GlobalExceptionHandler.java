@@ -1,9 +1,6 @@
 package com.etiqa.assessment.exception;
 
-import com.etiqa.assessment.exception.customException.EmailAlreadyExistException;
-import com.etiqa.assessment.exception.customException.NoRequestBodyException;
-import com.etiqa.assessment.exception.customException.NoRequestParamException;
-import com.etiqa.assessment.exception.customException.ResourceNotFoundException;
+import com.etiqa.assessment.exception.customException.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -73,9 +70,21 @@ public class GlobalExceptionHandler {
                 .body(exceptionDetails));
     }
 
+    @ExceptionHandler(InsufficientProductQuantityException.class)
+    public Mono<ResponseEntity<ExceptionDetails>> handleInsufficientProductQuantityException(InsufficientProductQuantityException exception, ServerWebExchange exchange){
+        ExceptionDetails exceptionDetails = new ExceptionDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                exchange.getRequest().getPath().value(),
+                "BAD_REQUEST"
+        );
+        return Mono.just(ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exceptionDetails));
+    }
+
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ExceptionDetails>> handleResourceNotFoundException(Exception exception, ServerWebExchange exchange) {
-        //System.out.println("exception : "+exception.getMessage());
         ExceptionDetails exceptionDetails = new ExceptionDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
