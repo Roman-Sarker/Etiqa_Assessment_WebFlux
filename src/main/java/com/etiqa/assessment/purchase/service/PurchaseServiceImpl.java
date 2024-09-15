@@ -1,5 +1,6 @@
 package com.etiqa.assessment.purchase.service;
 
+import com.etiqa.assessment.customers.model.Customer;
 import com.etiqa.assessment.customers.repository.CustomerRepository;
 import com.etiqa.assessment.exception.customException.InsufficientProductQuantityException;
 import com.etiqa.assessment.exception.customException.ResourceNotFoundException;
@@ -12,6 +13,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
 
 @Component
 public class PurchaseServiceImpl implements PurchaseService{
@@ -56,18 +59,17 @@ public class PurchaseServiceImpl implements PurchaseService{
                 .doOnError(e -> logger.error("Failed to fetch all purchase. Error: {}", e.getMessage()));
     }
 
+
     @Override
-    public Mono<Purchase> getPurchaseById(long id) {
-        return purchaseRepo.findById(id)
-                .doOnSuccess(purchase -> {
-                    if (purchase != null) {
-                        logger.info("Purchase fetched successfully: {}", purchase);
-                    }else {
-                        logger.warn("Purchase not found with id : "+id);
-                    }
+    public Flux<Purchase> getPurchaseByDateRange(LocalDate startDate, LocalDate endDate) {
+        return purchaseRepo.findByCreatedDateBetween(startDate, endDate)
+                .collectList()  // Collect the Flux into a List to count total records
+                .flatMapMany(purchase -> {
+                    logger.info("Total records found between {} and {}: {}", startDate, endDate, purchase.size());
+                    return Flux.fromIterable(purchase);  // Return the Flux from the List
                 })
-                .doOnError(e -> logger.error("Failed to fetch purchase with ID: {}. Error: {}", id, e.getMessage()))
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Purchase", "id", id)));
+                .doOnError(e -> logger.error("Failed to fetch customers by date range ({} to {}). Error: {}", startDate,endDate, e.getMessage()))
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Purchase","date between "+startDate.toString()+" and "+endDate.toString(),null)));
     }
 
 }
