@@ -1,6 +1,6 @@
-Technical Project Document: Customer and Product Management System
-Project Overview
-This backend API project is developed using Java Spring WebFlux, which implements reactive programming. The goal of the system is to manage customer and product information while handling purchases. All operations are non-blocking, making it highly scalable for modern web applications.
+# Technical Project Document: Customer and Product Management System - Etiqa
+## Project Overview
+This backend API project is developed using **Java Spring WebFlux**, which implements reactive programming. The goal of the system is to manage customer and product information while handling purchases. All operations are non-blocking, making it highly scalable for modern web applications.
 
 ## Features
 
