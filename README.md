@@ -1,7 +1,6 @@
-## Technical Project Document: Customer and Product Management System - Etiqa
-
-## Project Overview
-This backend API project is designed using **Java Spring WebFlux**, which leverages **reactive programming** principles to handle asynchronous, non-blocking interactions efficiently. The project manages three primary entities: **Customer**, **Product**, and **Purchase**, providing key functionalities around their creation, retrieval, and management. The application demonstrates modern, scalable, and performance-driven design using the **WebFlux Reactive Programming** paradigm.
+Technical Project Document: Customer and Product Management System
+Project Overview
+This backend API project is developed using Java Spring WebFlux, which implements reactive programming. The goal of the system is to manage customer and product information while handling purchases. All operations are non-blocking, making it highly scalable for modern web applications.
 
 ## Features
 
@@ -32,7 +31,6 @@ This backend API project is designed using **Java Spring WebFlux**, which levera
 4. **Maven Project**: For dependency and project management
 5. **IDE**: IntelliJ IDEA 2014.1.4 (Community Edition)
 6. **Database**: MySQL - 10.4.28-MariaDB for persistence
-7. **Swagger UI**: Provide API documentation and testing tools
 
 ## Design Pattern
 The project uses a Java skeleton based on the **Spring MVC** architecture, incorporating controller, service, and repository layers, with a focus on **reactive programming** and **non-blocking I/O**.
@@ -112,4 +110,3 @@ The project integrates Swagger UI to provide API documentation and testing tools
 ---
 
 This document outlines the core features, technologies, and database architecture for the **Customer and Product Management System** built using **Java Spring WebFlux** with reactive programming concepts. The application provides scalable and efficient backend services with robust exception handling, validation, and logging mechanisms.
-![image](https://github.com/user-attachments/assets/38303ec2-7f8b-4b2d-97c9-5b806a514626)
