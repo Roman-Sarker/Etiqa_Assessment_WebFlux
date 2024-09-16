@@ -57,9 +57,48 @@ MySQL is the database of choice, and connection properties are configured in the
 - **Custom exception classes** are created to provide meaningful messages and HTTP statuses.
 - Any unhandled exceptions will be caught by the global handler, which then returns a structured error response.
 
+
 ## Validation
-- The model classes are validated using **annotations** such as `@NotNull`, `@Size`, and `@Email` from the **jakarta.validation** package.
-- If validation fails, the **Global Exception Handler** will capture the validation errors and return a clear response to the client.
+
+This project uses the **jakarta.validation** package to ensure that the data provided to the system is correct and meets all necessary criteria. Validation annotations such as `@NotNull`, `@Size`, and `@Email` are used to enforce constraints on model classes. 
+
+In case of validation errors, the **Global Exception Handler** captures these issues and provides a clear, informative response to the client.
+
+### System Validations
+
+#### 1. Customer Management
+
+- **Before Save & Update:**
+  1. First name cannot be blank.
+  2. Last name cannot be blank.
+  3. Verify the email address format using `@Email`.
+  4. Status field cannot be empty and must have a maximum size of 1 character.
+
+- **Get by ID and Date Range:**
+  1. Returns an error if no customer is found with the specified ID (e.g., `Customer not found with id: '300'`).
+  2. Returns an error if no customer is found within the specified date range (e.g., `Customer not found with date between 2024-09-17 and 2024-09-17`).
+
+#### 2. Product Management
+
+- **Before Save & Update:**
+  1. Book title cannot be empty.
+  2. Book price must be greater than 0.
+  3. Book quantity must be greater than 0.
+  4. Status field cannot be empty and must have a maximum size of 1 character.
+
+- **Get by ID:**
+  1. Returns an error if no product is found with the specified ID (e.g., `Product not found with id: '30'`).
+
+#### 3. Purchase Management
+
+- **Before Save:**
+  1. Verify that the customer ID exists.
+  2. Verify that the product ID exists.
+  3. Check for sufficient product quantity before processing the purchase.
+
+- **Get by Purchase ID and Date Range:**
+  1. Returns an error if no purchase is found within the specified date range (e.g., `Purchase not found with date between 2024-09-17 and 2024-09-17`).
+
 
 ## Logging
 Logging is implemented using **Logback** with support for SLF4J API.
