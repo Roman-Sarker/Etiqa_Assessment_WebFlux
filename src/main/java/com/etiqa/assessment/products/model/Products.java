@@ -18,7 +18,7 @@ public class Products {
     @Column("book_title")
     private String bookTitle;
 
-    @Min(value = 1, message = "Book quantity must be greater than 0")
+    @Min(value = 1, message = "Book price must be greater than 0")
     @Column("book_price")
     private float bookPrice;
 
