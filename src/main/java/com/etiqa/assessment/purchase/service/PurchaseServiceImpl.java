@@ -1,6 +1,5 @@
 package com.etiqa.assessment.purchase.service;
 
-import com.etiqa.assessment.customers.model.Customer;
 import com.etiqa.assessment.customers.repository.CustomerRepository;
 import com.etiqa.assessment.exception.customException.InsufficientProductQuantityException;
 import com.etiqa.assessment.exception.customException.ResourceNotFoundException;
